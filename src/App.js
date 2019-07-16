@@ -29,10 +29,7 @@ class App extends Component {
       }).catch(error => {
         console.log(error);
       });
-      await this.initialProduct();
-      this.setState({
-        sizesByColor: this.state.listColorsObject[this.state.selectedColor]
-      })
+      this.initialProduct();
   }
 
   initialProduct = () => {
@@ -42,8 +39,10 @@ class App extends Component {
       return acc;
     }, {})
 
+    let color = Object.keys(orderedListSizes).sort((a, b) => orderedListSizes[b] - orderedListSizes[a])[0];
     this.setState({
-      selectedColor: Object.keys(orderedListSizes).sort((a, b) => orderedListSizes[b] - orderedListSizes[a])[0]
+      selectedColor: color,
+      sizesByColor: this.state.listColorsObject[color]
     })
   }
 
@@ -53,20 +52,13 @@ class App extends Component {
     });
   }
 
-  handleOnChangeColor = async (e) => {
-    await this.setState({
-      selectedColor: e.target.value
-    });
-    this.updateSizes();
-  }
-
-  updateSizes = async () => {
-    await this.setState({
-      sizesByColor: this.state.listColorsObject[this.state.selectedColor]
-    });
+  handleOnChangeColor = (e) => {
+    let color = e.target.value;
     this.setState({
-      selectedSize: this.state.sizesByColor[0]
-    })
+      selectedColor: color,
+      sizesByColor: this.state.listColorsObject[color],
+      selectedSize: this.state.listColorsObject[color][0]
+    });
   }
 
   render() {
